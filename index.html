@@ -18,6 +18,8 @@
  </body>
  <script src="https://u.gitcafe.net/assets/js/libs.js"></script>
  <script>
+const MANAGE_HOST = 'https://alipaper.pages.dev/';
+
 function GetId(name) {
     var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
     var r = window.location.search.substr(1).match(reg);
@@ -71,17 +73,20 @@ Zepto(function($) {
     var api = 'https://gitcafe.net/tool/alipaper/';
 
     /* 自动填充密码*/
-    !
-    function() {
+    !function() {
         $("#token").length > 0 && setTimeout(function() {
             $("#token").attr("value", localStorage.getItem("alipaper_token"));
-        },
-        100);
+        },100);
 
         $("#mail").length > 0 && setTimeout(function() {
             $("#mail").attr("value", localStorage.getItem("alipaper_mail"));
-        },
-        100);
+        },100);
+
+        $(".comfirm_read").length > 0 && setTimeout(function() {
+            if(localStorage.getItem('submit_read') == 'is_read' ){
+                document.getElementsByTagName('button')[0].innerText='OK，您已获得投稿权限';
+            }
+        },100);
 
         $("#cat_name").length > 0 && $("#cat_name").text(cat_code($("#cat_name").attr('class')));
 
@@ -90,7 +95,7 @@ Zepto(function($) {
             yuxStorage.keys().then(function(keys) {
                 keys.forEach(function(key) {
                     yuxStorage.getItem(key).then(v =>{
-                        $("#mykey").append("<tr><td>" + v[0] + "</td><td><a target='_blank' href='https://www.aliyundrive.com/s/" + key + "'>" + key + "</a></td><td title='" + v[3] + "'>" + v[1] + "</td><td><a class='tousu' target='_blank' href='https://alipaper.yunluo.workers.dev/tousu?id=" + key + "&cat=" + cat_code(v[2]) + "&title=" + v[1] + "' title='若此资源无效或违规，请投诉'>投诉</a><span> 丨 </span><a class='update' target='_blank' href='https://alipaper.yunluo.workers.dev/update?id=" + key + "&cat=" + cat_code(v[2]) + "&title=" + v[1] + "&des=" + v[3] + "' title='资源管理员可以更新'>更新</a></td></tr>");
+                        $("#mykey").append("<tr><td>" + v[0] + "</td><td><a target='_blank' href='https://www.aliyundrive.com/s/" + key + "'>" + key + "</a></td><td title='" + v[3] + "'>" + v[1] + "</td><td><a class='tousu' target='_blank' href='"+ MANAGE_HOST + "?page=tousu&id=" + key + "&cat=" + cat_code(v[2]) + "&title=" + v[1] + "' title='若此资源无效或违规，请投诉'>投诉</a><span> 丨 </span><a class='update' target='_blank' href='"+ MANAGE_HOST + "?page=update&id=" + key + "&cat=" + cat_code(v[2]) + "&title=" + v[1] + "&des=" + v[3] + "' title='资源管理员可以更新'>更新</a></td></tr>");
                     });
 
                 });
@@ -99,7 +104,7 @@ Zepto(function($) {
 
         }
 
-    } ();
+    }();
 
     $(".vote").click(function() {
         var ajax_data = {
@@ -167,6 +172,14 @@ Zepto(function($) {
         } else {
             $(".err_info").empty();
         }
+
+    })
+
+
+
+    $(".comfirm_read").click(function() {
+        localStorage.setItem("submit_read","is_read");
+        this.innerText="OK，您已获得投稿权限";
 
     })
 
@@ -239,7 +252,7 @@ Zepto(function($) {
                     button: "好的，我去瞅瞅看",
                     dangerMode: true
                 }).then((value) =>{
-                    window.open("https://alipaper.yunluo.workers.dev/about#tggz");
+                    window.open(MANAGE_HOST + "?page=about#tggz");
                 });
             }
         }
@@ -368,15 +381,15 @@ Zepto(function($) {
 
 /* 下面是页面模板 */
 
-const about='<style>*{-webkit-font-smoothing:antialiased;cursor:default!important}body,html{background-color:#fff;font-family:PingFangSC-Light,Nunito,sans-serif;height:100vh;margin:0 8px;line-height:1.75em}img{text-align:center;border-radius:2px;max-width:100%}.shadow{box-shadow:0 2px 3px rgba(0,0,0,.2)}h1{font-size:24px;padding:10px 0 0}h3 {padding: 0;margin: 0;margin-top: 30px;border-top: solid 1px #eee}.author{font-size:12px;color:#999;font-size:14px}.footer{padding:40px 0;text-align:center;color:#ccc}.footer span{border:1px solid #eee;border-radius:2px;padding:2px 8px;font-size:12px;font-family:Helvetica Neue,Helvetica,Arial,sans-serif}.body{font-size:15px;padding-top:10px}.article{margin:0 auto;max-width:677px}.center{text-align:center}.full-width{width:100%;max-width:100%}li{line-height:1em}p{line-height:1.75em;margin:4px auto}hr{height:0;border:0;border-top:1px solid #eee}.end{margin-top: 50px}</style><div class="article"><h1>关于小纸条的一些说明</h1><div class="author"><a>From 云落</a> <span>2022-1-4 10:25:22</span></div><hr /><div class="body"><p>本人因为经常到处找云盘资源，有的资源不好找，所以做了个资源导航页面，如果有什么问题的话，在这里面做一些解答</p><h3>小纸条里面的资源都是你的吗？</h3><p>错的，小纸条不存储任何资源的，你可以把小纸条当成一个资源导航，资源文件本身还是在各位网友的云盘里面的，小纸条本身仅仅是一个15kb大小的html文档</p><h3>小纸条里面的资源都是哪里来的？</h3><p>网络收集或者其他网友的投稿分享</p><h3>我发现有的资源失效了或者上面资源侵犯我的版权了，怎么删除掉？</h3><p>小纸条是支持投诉的，直接点击投诉链接，按照要求投诉删除，请点击并提交即可</p><h3>小纸条的资源会更新吗？另外更新的话怎么提醒我？</h3><p>首先，小纸条的资源主要是有网友投稿的，只要有人投稿那么肯定就会更新的，另外关于资源更新提醒的，小纸条首页有订阅微信的，微信扫码之后关注公众好，如果有资源更新就会微信提醒你的</p><h3>小纸条提交的资源都有审查吗？</h3><p>没有，只能对一些比较可疑的项目进行查核，其他基本不查的，无他，没空，懒罢了</p><h3 id="tggz">投稿资源有什么规则吗</h3><p>首先是不能上传的</p><p>1，<span style="color:#e53333">违法，擦边球，暧昧的</span>咱们肯定是不能传的</p><p>2，还<span style="color:#e53333">没公开上映的资源</span>也是不能上传的，咱不能影响人家做生意</p><p>下面是具体的投稿要求</p><p>1，必须是<span style="color:#e53333">永久分享</span>链接，非永久链接可能会删除或者转存重新提交</p><p>2，有<span style="color:#e53333">提取码</span>的或者<span style="color:#e53333">解压码</span>的必须提供，可以放在资源标题或者说明里面，如果放在说明里就必须放在最前面，在后面有可能被程序截取掉</p><p>3，标题不能长，简单明了就好，太长页面会显得很乱</p><p>4，如果<span style="color:#e53333">重复资源请不要提交了</span>，影视资源标题和其他要素之间间隔一个<span style="color:#e53333">空格</span>或者一个<span style="color:#e53333">. </span><span>比如 正确的标题是 <span style="background-color:#e53333">指环王 全集</span> 中间有一个空格或者.<span style="background-color:#e53333">指环王.全集</span>，既可以自动查重，也可以查询视频资料</span></p><p>ps.影视资源 关键字 后留一个空格或者一个. 程序会自动搜索检查有木有重复的，如果频繁提交重复资源，会被BAN ip的</p><p>5，资源如果可以查询资料的，尽量查询资料，这里说的是影视资源</p><p>6，资源如果是大合集类型，请在说明里面写入目录，注意：一定要要有<span style="color:#e53333">目录</span>两个字，不然会被截取的</p><p>推荐的标题:庆余年 中文版，蜘蛛侠 全集，霍比特人 4K，毒液2 (2021)，大主宰 全集系列</p><p>不推荐的标题:[电影][蜘蛛侠][4k][H256][杜比音效][国语配音]</p><p><span style="color:#e53333">如上，资源标题最多3个关键词，第一个必须是资源原本名字，第二，第三不做限制，可以写一个主演名字，或者年代，或者码率都可以，比如：天龙八部.胡军.4K，不要在资源名称前面添加任何修饰词，比如：收藏级，全集，强烈推荐，稀缺资源等等</span></p><br><p align="center"><button style="font-size:20px" onclick="localStorage.setItem("submit_read", "is_read");this.innerText="OK，您已获得投稿权限"">点击确认后才可以投稿</button></p><h3 id="qtlj">小纸条还有哪些域名</h3><p>第一个：<a href="https://u.gitcafe.net" target="_blank" rel="noopener noreferrer"><b>https://u.gitcafe.net</b></a>  [此域名服务器是又拍云CDN，主要推荐这个，又短又快]</p><p>第二个：<a href="https://o.gitcafe.net" target="_blank" rel="noopener noreferrer"><b>https://o.gitcafe.net</b></a>  [此域名服务器是阿里云CDN，速度很快，而且和源站同步]</p><p>第三个：<a href="http://a.gitcafe.net" target="_blank" rel="noopener noreferrer"><b>http://a.gitcafe.net</b></a>  [此域名服务器是七牛云CDN，这个速度也很好，就是不支持https]</p><p>第四个：<a href="https://alipaper.yunluo.workers.dev" target="_blank" rel="noopener noreferrer"><b>https://alipaper.yunluo.workers.dev</b></a> [此域名服务器是cloudfare的CDN，这个速度也很好，尤其是全球访问更好，就是域名有点长]</p><br><p>以上服务器关系：原始数据在第五个我的服务器上，然后使用微力同步软件同步数据到我家的群晖NAS中，群晖NAS通过CloudSync套件数据同步到阿里云OSS即第二个域名站点，第二个域名服务器得到数据，将数据给第一，第三，第四服务器站点调用，故：第五站点和第二站点其实是关键，如果第二站点和第五站点数据不一致，那么应该是我家NAS断电了或者断网了</p><h3>我提交资源到小纸条能得到什么？</h3><p>得到阿里云盘用户，小纸条用户的赞美</p><p class="end">未完待续</p></div></div><div class="footer"><span>POWERED BY 小纸条 2021-2022</span></div>';
+const about='<style>*{-webkit-font-smoothing:antialiased;cursor:default!important}body,html{background-color:#fff;font-family:PingFangSC-Light,Nunito,sans-serif;height:100vh;margin:0 8px;line-height:1.75em}img{text-align:center;border-radius:2px;max-width:100%}.shadow{box-shadow:0 2px 3px rgba(0,0,0,.2)}h1{font-size:24px;padding:10px 0 0}h3 {padding: 0;margin: 0;margin-top: 30px;border-top: solid 1px #eee}.author{font-size:12px;color:#999;font-size:14px}.footer{padding:40px 0;text-align:center;color:#ccc}.footer span{border:1px solid #eee;border-radius:2px;padding:2px 8px;font-size:12px;font-family:Helvetica Neue,Helvetica,Arial,sans-serif}.body{font-size:15px;padding-top:10px}.article{margin:0 auto;max-width:677px}.center{text-align:center}.full-width{width:100%;max-width:100%}li{line-height:1em}p{line-height:1.75em;margin:4px auto}hr{height:0;border:0;border-top:1px solid #eee}.end{margin-top: 50px}</style><div class="article"><h1>关于小纸条的一些说明</h1><div class="author"><a>From 云落</a> <span>2022-1-4 10:25:22</span></div><hr /><div class="body"><p>本人因为经常到处找云盘资源，有的资源不好找，所以做了个资源导航页面，如果有什么问题的话，在这里面做一些解答</p><h3>小纸条里面的资源都是你的吗？</h3><p>错的，小纸条不存储任何资源的，你可以把小纸条当成一个资源导航，资源文件本身还是在各位网友的云盘里面的，小纸条本身仅仅是一个15kb大小的html文档</p><h3>小纸条里面的资源都是哪里来的？</h3><p>网络收集或者其他网友的投稿分享</p><h3>我发现有的资源失效了或者上面资源侵犯我的版权了，怎么删除掉？</h3><p>小纸条是支持投诉的，直接点击投诉链接，按照要求投诉删除，请点击并提交即可</p><h3>小纸条的资源会更新吗？另外更新的话怎么提醒我？</h3><p>首先，小纸条的资源主要是有网友投稿的，只要有人投稿那么肯定就会更新的，另外关于资源更新提醒的，小纸条首页有订阅微信的，微信扫码之后关注公众好，如果有资源更新就会微信提醒你的</p><h3>小纸条提交的资源都有审查吗？</h3><p>没有，只能对一些比较可疑的项目进行查核，其他基本不查的，无他，没空，懒罢了</p><h3 id="tggz">投稿资源有什么规则吗</h3><p>首先是不能上传的</p><p>1，<span style="color:#e53333">违法，擦边球，暧昧的</span>咱们肯定是不能传的</p><p>2，还<span style="color:#e53333">没公开上映的资源</span>也是不能上传的，咱不能影响人家做生意</p><p>下面是具体的投稿要求</p><p>1，必须是<span style="color:#e53333">永久分享</span>链接，非永久链接可能会删除或者转存重新提交</p><p>2，有<span style="color:#e53333">提取码</span>的或者<span style="color:#e53333">解压码</span>的必须提供，可以放在资源标题或者说明里面，如果放在说明里就必须放在最前面，在后面有可能被程序截取掉</p><p>3，标题不能长，简单明了就好，太长页面会显得很乱</p><p>4，如果<span style="color:#e53333">重复资源请不要提交了</span>，影视资源标题和其他要素之间间隔一个<span style="color:#e53333">空格</span>或者一个<span style="color:#e53333">. </span><span>比如 正确的标题是 <span style="background-color:#e53333">指环王 全集</span> 中间有一个空格或者.<span style="background-color:#e53333">指环王.全集</span>，既可以自动查重，也可以查询视频资料</span></p><p>ps.影视资源 关键字 后留一个空格或者一个. 程序会自动搜索检查有木有重复的，如果频繁提交重复资源，会被BAN ip的</p><p>5，资源如果可以查询资料的，尽量查询资料，这里说的是影视资源</p><p>6，资源如果是大合集类型，请在说明里面写入目录，注意：一定要要有<span style="color:#e53333">目录</span>两个字，不然会被截取的</p><p>推荐的标题:庆余年 中文版，蜘蛛侠 全集，霍比特人 4K，毒液2 (2021)，大主宰 全集系列</p><p>不推荐的标题:[电影][蜘蛛侠][4k][H256][杜比音效][国语配音]</p><p><span style="color:#e53333">如上，资源标题最多3个关键词，第一个必须是资源原本名字，第二，第三不做限制，可以写一个主演名字，或者年代，或者码率都可以，比如：天龙八部.胡军.4K，不要在资源名称前面添加任何修饰词，比如：收藏级，全集，强烈推荐，稀缺资源等等</span></p><br><p align="center"><button class="comfirm_read" style="font-size:20px">点击确认后才可以投稿</button></p><h3 id="qtlj">小纸条还有哪些域名</h3><p>第一个：<a href="https://u.gitcafe.net" target="_blank" rel="noopener noreferrer"><b>https://u.gitcafe.net</b></a>  [此域名服务器是又拍云CDN，主要推荐这个，又短又快]</p><p>第二个：<a href="https://o.gitcafe.net" target="_blank" rel="noopener noreferrer"><b>https://o.gitcafe.net</b></a>  [此域名服务器是阿里云CDN，速度很快，而且和源站同步]</p><p>第三个：<a href="http://a.gitcafe.net" target="_blank" rel="noopener noreferrer"><b>http://a.gitcafe.net</b></a>  [此域名服务器是七牛云CDN，这个速度也很好，就是不支持https]</p><p>第四个：<a href="https://alipaper.yunluo.workers.dev" target="_blank" rel="noopener noreferrer"><b>https://alipaper.yunluo.workers.dev</b></a> [此域名服务器是cloudfare的CDN，这个速度也很好，尤其是全球访问更好，就是域名有点长]</p><br><p>以上服务器关系：原始数据在第五个我的服务器上，然后使用微力同步软件同步数据到我家的群晖NAS中，群晖NAS通过CloudSync套件数据同步到阿里云OSS即第二个域名站点，第二个域名服务器得到数据，将数据给第一，第三，第四服务器站点调用，故：第五站点和第二站点其实是关键，如果第二站点和第五站点数据不一致，那么应该是我家NAS断电了或者断网了</p><h3>我提交资源到小纸条能得到什么？</h3><p>得到阿里云盘用户，小纸条用户的赞美</p><p class="end">未完待续</p></div></div><div class="footer"><span>POWERED BY 小纸条 2021-2022</span></div>';
 
 const contact = '<div class="container"><h1><a href="">联系中心</a></h1>在这里输入发给管理员的信息，这里会直接推送到管理员微信，如有需要，可以留下你的联系方式<div class="row"><div class="column"><textarea style="height:100px"placeholder="请在此输入您的信息"id="text"></textarea></div></div><div class="row"><div class="column"><select id="way"><option value="0">请选择联系方式</option><option value="QQ">QQ</option><option value="wechat">微信</option><option value="email">邮箱</option></select><input type="text"placeholder="请留下你的联系方式，必要的话，我会联系你的"id="mail"required></div></div><a style="display: block;"class="button"id="contact"href="javascript:;">提交</a></div>';
 
 const mykey = '<div class="container"><h1><a href="">我的投稿</a></h1><p>请注意：以下记录为浏览器本地记录，服务器无记录，本地数据库存储，一般清除浏览器缓存不会清除数据</p><hr><table width="100%"><thead><tr><th width="20%">日期</th><th width="20%">链接</th><th width="40%">标题</th><th width="20%">操作</th></tr></thead><tbody id="mykey"></tbody></table></div>';
 
-const tougao = '<div class="container"><h1><a href="">小纸条资源提交中心</a></h1>资源标题<span class="red">*</span>(可直接粘贴口令)<a target="_blank"class="red"href="https://alipaper.yunluo.workers.dev/about#tggz">投稿必看</a><div class="row"><div class="column"><input type="text"oninput="value=value.replace("「阿里云盘」","").replace(/(.+「|「)/s,"").replace(/」.+/s,"").replace(/https.+/s,"").substr(0,20)"placeholder="用一句话简单说明你的资源，最多20个文字哦~"id="title"required></div></div><div id="search_res"></div>资源链接<span class="red">*</span>(可直接粘贴口令)<div class="row"><div class="column"><input type="url"oninput="value=value.replace(/.+https/s,"https").replace(/ 点击.+/s,"").replace(/folder.+/s,"")"placeholder="请不要输入链接以外的内容，注意不要把提取码混入里面哦"id="key"required></div></div>资源信息<span class="red">*</span><div class="row"><div class="column"><form><select name="province"onChange="set_cat(this, this.form.cat);"><option value="0">选择一级分类</option><option value="电视">电视</option><option value="电影">电影</option><option value="动漫">动漫</option><option value="视频">视频</option><option value="音乐">音乐</option><option value="软件">软件</option><option value="文档">文档</option><option value="图片">图片</option><option value="其他">其他</option></select></div><div class="column"><select name="cat"id="cat"><option value="0">选择二级分类</option></select></form></div></div>资源说明<a class="button"id="dbid"href="javascript:;">获取信息</a><div class="row"><div class="column"><textarea placeholder="请详细说明下文件内容"id="des"></textarea></div></div><div class="row"><div class="column">我的邮箱<span class="red">*</span><input type="email"placeholder="请输入邮箱，必须是可用的，用来发送资源失效，资源投诉等通知邮件"id="mail"required></div></div><div class="row"><div class="column">管理密钥<span class="red">*</span><input type="number"placeholder="资源管理密钥，可以更新和删除资源，仅支持纯数字"id="token"required></div></div><a style="display: block;"class="button"id="tougao"href="javascript:;">提交</a></div>';
+const tougao = '<div class="container"><h1><a href="">小纸条资源提交中心</a></h1>资源标题<span class="red">*</span>(可直接粘贴口令)<a target="_blank"class="red"href="'+ MANAGE_HOST + '?page=about#tggz">投稿必看</a><div class="row"><div class="column"><input type="text"oninput="value=value.replace("「阿里云盘」","").replace(/(.+「|「)/s,"").replace(/」.+/s,"").replace(/https.+/s,"").substr(0,20)"placeholder="用一句话简单说明你的资源，最多20个文字哦~"id="title"required></div></div><div id="search_res"></div>资源链接<span class="red">*</span>(可直接粘贴口令)<div class="row"><div class="column"><input type="url"oninput="value=value.replace(/.+https/s,"https").replace(/ 点击.+/s,"").replace(/folder.+/s,"")"placeholder="请不要输入链接以外的内容，注意不要把提取码混入里面哦"id="key"required></div></div>资源信息<span class="red">*</span><div class="row"><div class="column"><form><select name="province"onChange="set_cat(this, this.form.cat);"><option value="0">选择一级分类</option><option value="电视">电视</option><option value="电影">电影</option><option value="动漫">动漫</option><option value="视频">视频</option><option value="音乐">音乐</option><option value="软件">软件</option><option value="文档">文档</option><option value="图片">图片</option><option value="其他">其他</option></select></div><div class="column"><select name="cat"id="cat"><option value="0">选择二级分类</option></select></form></div></div>资源说明<a class="button"id="dbid"href="javascript:;">获取信息</a><div class="row"><div class="column"><textarea placeholder="请详细说明下文件内容"id="des"></textarea></div></div><div class="row"><div class="column">我的邮箱<span class="red">*</span><input type="email"placeholder="请输入邮箱，必须是可用的，用来发送资源失效，资源投诉等通知邮件"id="mail"required></div></div><div class="row"><div class="column">管理密钥<span class="red">*</span><input type="number"placeholder="资源管理密钥，可以更新和删除资源，仅支持纯数字"id="token"required></div></div><a style="display: block;"class="button"id="tougao"href="javascript:;">提交</a></div>';
 
-const tgall = '<div class="container"><h1><a href="">小纸条资源提交中心</a></h1>请先选择分类<a target="_blank"style="color:red;"href="https://alipaper.yunluo.workers.dev/about#tggz">批量投稿必看</a><div class="row"><div class="column"><form><select name="province"onChange="set_cat(this, this.form.cat);"><option value="0">选择一级分类</option><option value="电视">电视</option><option value="电影">电影</option><option value="动漫">动漫</option><option value="视频">视频</option><option value="音乐">音乐</option><option value="软件">软件</option><option value="文档">文档</option><option value="图片">图片</option><option value="其他">其他</option></select></div><div class="column"><select name="cat"id="cat"><option value="0">选择二级分类</option></select></form></div></div>资源批量提交<div class="row"><div class="column"><textarea style="height:350px"placeholder="请在此输入您的资源标题和链接，最多同时导入20个，采用小白杨客户端复制格式，如下：\/n标题\/n链接：分享链接"id="keys"></textarea></div></div><div class="row"><div class="column">管理密钥<input type="number"placeholder="资源管理密钥，可以更新和删除资源，仅支持纯数字"id="token"required></div></div><a style="display: block;"class="button"id="tgall"href="javascript:;">提交</a></div>';
+const tgall = '<div class="container"><h1><a href="">小纸条资源提交中心</a></h1>请先选择分类<a target="_blank"style="color:red;"href="'+ MANAGE_HOST + '?page=about#tggz">批量投稿必看</a><div class="row"><div class="column"><form><select name="province"onChange="set_cat(this, this.form.cat);"><option value="0">选择一级分类</option><option value="电视">电视</option><option value="电影">电影</option><option value="动漫">动漫</option><option value="视频">视频</option><option value="音乐">音乐</option><option value="软件">软件</option><option value="文档">文档</option><option value="图片">图片</option><option value="其他">其他</option></select></div><div class="column"><select name="cat"id="cat"><option value="0">选择二级分类</option></select></form></div></div>资源批量提交<div class="row"><div class="column"><textarea style="height:350px"placeholder="请在此输入您的资源标题和链接，最多同时导入20个，采用小白杨客户端复制格式，如下：\/n标题\/n链接：分享链接"id="keys"></textarea></div></div><div class="row"><div class="column">管理密钥<input type="number"placeholder="资源管理密钥，可以更新和删除资源，仅支持纯数字"id="token"required></div></div><a style="display: block;"class="button"id="tgall"href="javascript:;">提交</a></div>';
 
 let deletekey = '<div class="container"><h1><a href="">小纸条资源删除中心</a></h1>资源链接<div class="row"><div class="column"><input type="text"disabled value="'+ key +'"id="key"></div></div>资源名<div class="row"><div class="column"><input type="text"disabled value="'+ title +'"id="title"></div></div><a style="display: block;"class="button button-outline"href="https://www.aliyundrive.com/s/'+ key +'">立刻查看</a><a style="display: block;"class="button"id="delete"data-cat="'+ cat +'"href="javascript:;">删除</a></div>';
 
@@ -392,42 +405,41 @@ let html = '对不起，您打开的方式不正确';
 switch( page ) {
     case 'about':
         $('title').html('关于云落');
-        $('#app').append(about);
-            if(localStorage.getItem('submit_read') == 'is_read' ){
-                document.getElementsByTagName('button')[0].innerText='OK，您已获得投稿权限';
-            } 
+        $('#app').html(about);
         break;
     case 'contact':
         $('title').html('联系云落');
-        $('#app').append(contact);
+        $('#app').html(contact);
         break;
     case 'mykey':
         $('title').html('我的投稿');
-        $('#app').append(mykey);
+        $('#app').html(mykey);
         break;
     case 'tougao':
         $('title').html('资源投稿');
-        $('#app').append(tougao);
+        $('#app').html(tougao);
         break;
     case 'delete':
         $('title').html('小纸条资源删除中心');
-        $('#app').append(deletekey);
+        $('#app').html(deletekey);
         break;
     case 'vote':
         $('title').html('资源投票中心');
-        $('#app').append(vote);
+        $('#app').html(vote);
         break;
     case 'tousu':
         $('title').html('小纸条资源投诉中心');
-        $('#app').append(tousu);
+        $('#app').html(tousu);
         break;
     case 'update':
         $('title').html('小纸条资源更新中心');
-        $('#app').append(update);
+        $('#app').html(update);
         break;
      default:
         $('title').html('资源打开错误');
-        $('#app').append(html);
+        $('#app').html(html);
+
 }
+
  </script>
 </html>
